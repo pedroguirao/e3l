@@ -3,16 +3,16 @@
 import base64
 from odoo import models, fields, api
 
-class d_e3l(models.Model):
-	_name = 'd_e3l'
-    
-    e3l_filename = fields.Char()
-    e3l_binary = fields.Binary()
-    x_di_e3l_id = fields.Many2one('x_dis',string='E3L Descargable')
-    
-	@api.onchange('x_di_e3l_id')
-    def generate_file(self):
-        return self.write({
-            'e3l_filename': self.x_di_e3l_id.x_name +'.xml',
-            'e3l_binary': base64.encodestring(self.x_di_e3l_id.x_di_e3l.encode())
-        })
+class descarga_e3l(models.Model):
+    _name = 'descarga.e3l'
+    _description='Descarga E3L'
+        
+    x_e3l_id = fields.Many2one('x_dis',string='E3L Descargable')
+    x_name = fields.Char()
+    x_anexo = fields.Binary() 
+            
+    @api.constrains('x_e3l_id')
+    def genera_anexo(self):
+        self.x_name = self.x_e3l_id.x_codigo_di + '.xml'
+        self.x_anexo = base64.encodestring(self.x_e3l_id.x_di_e3l.encode())
+        
